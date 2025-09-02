@@ -39,6 +39,7 @@ namespace LinkedIdSelector.ViewModel
 
             LinkedElements = ItemStore.LinkedElementInfos;
             SelectLinkedElementCommand = new RelayCommand(x => _revitExternalEvent.MakeRequest(RevitRequestId.SelectLinkedElement));
+
             SelectMultipleLinkedElementsCommand = new RelayCommand(x =>
             {
                 IsFinishSelectionVisible = true;

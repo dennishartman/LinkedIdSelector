@@ -11,6 +11,7 @@
     Background="{DynamicResource ApplicationBackGround}"
     Width="498"
     Height="286"
+    SizeToContent="WidthAndHeight"
     Topmost="True"
     mc:Ignorable="d">
 
@@ -70,9 +71,17 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding LinkName}" Header="Link Name" />
+                <DataGridTemplateColumn Header="Copy">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Copy"
+                                    Command="{Binding DataContext.CopyElementIdCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding ElementId}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
         <StackPanel
             Grid.Row="2"
             Orientation="Horizontal"
@@ -94,5 +103,13 @@
                 Content="Finish selection"
                 Visibility="{Binding IsFinishSelectionVisible, Converter={StaticResource BoolToVis}}" />
         </StackPanel>
+      
+        <Button
+            Grid.Row="2"
+            Width="100"
+            Margin="10"
+            HorizontalAlignment="Right"
+            Command="{Binding SelectLinkedElementCommand}"
+            Content="Select Element" />
     </Grid>
 </Window>
