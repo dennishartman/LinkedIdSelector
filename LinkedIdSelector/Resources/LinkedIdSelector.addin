@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>LinkedIdSelector</Name>
+		<Assembly>LinkedIdSelector\LinkedIdSelector.dll</Assembly>
+		<AddInId>F7B65CD7-62F8-49C4-80CD-1CD6B93263EC</AddInId> <!--Replace this Guid with a new Guid-->
+		<FullClassName>LinkedIdSelector.RibbonApplication</FullClassName>
+		<VendorId>BAM Advies en Engineering</VendorId>
+		<Text>LinkedIdSelector</Text>
+		<Description>This is a description</Description>
+		<VisibilityMode>AlwaysVisible</VisibilityMode>
+		<Discipline>Any</Discipline>
+		<LanguageType>Unknown</LanguageType>
+	</AddIn>
+</RevitAddIns>
