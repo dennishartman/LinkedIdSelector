@@ -13,10 +13,10 @@ namespace LinkedIdSelector.ViewModel
     {
         private Document _doc { get; set; }
         private RevitExternalEvents _revitExternalEvent;
-        public ICommand SelectLinkedElementCommand { get; }
-        public ICommand CopyElementIdCommand { get; }
-        public ICommand SelectMultipleLinkedElementsCommand { get; }
-        public ICommand FinishSelectionCommand { get; }
+        public ICommand SelectLinkedElementCommand { get; private set; }
+        public ICommand CopyElementIdCommand { get; private set; }
+        public ICommand SelectMultipleLinkedElementsCommand { get; private set; }
+        public ICommand FinishSelectionCommand { get; private set; }
         private bool _isFinishSelectionVisible;
         public bool IsFinishSelectionVisible
         {
@@ -51,12 +51,6 @@ namespace LinkedIdSelector.ViewModel
                 if (param is ElementId id)
                 {
                     Clipboard.SetText(id.Value.ToString());
-
-            CopyElementIdCommand = new RelayCommand(param =>
-            {
-                if (param is ElementId id)
-                {
-                    Clipboard.SetText(id.IntegerValue.ToString());
                 }
             });
         }
