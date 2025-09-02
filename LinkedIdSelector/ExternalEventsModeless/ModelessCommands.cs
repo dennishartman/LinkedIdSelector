@@ -34,7 +34,7 @@ namespace LinkedIdSelector.ExternalEventsModeless
                 ElementId linkedElementId = reference.LinkedElementId;
                 string linkName = linkInstance.Name;
 
-                itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId.IntegerValue, linkName));
+                itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkName));
                 itemstore.AddLogToInterface($"Selected {linkedElementId.IntegerValue} from {linkName}");
             }
             catch (Autodesk.Revit.Exceptions.OperationCanceledException)
