@@ -45,12 +45,6 @@ namespace LinkedIdSelector.ExternalEventsModeless
                                 return;
                             }
 
-                        case RevitRequestId.SampleRequest:
-                            {
-                                _modelessCommands.ModelessSampleCommand(uiapp, _itemStore);
-                                break;
-                            }
-
                         case RevitRequestId.SelectLinkedElement:
                             {
                                 _modelessCommands.SelectLinkedElement(uiapp, _itemStore);

@@ -23,8 +23,6 @@ namespace LinkedIdSelector.ExternalEventsModeless
     public enum RevitRequestId
     {
         None = 0,
-        SampleRequest = 1,
-        SelectLinkedElement = 2,
-
+        SelectLinkedElement = 1,
     }
 }
