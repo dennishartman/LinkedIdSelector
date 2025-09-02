@@ -24,5 +24,6 @@ namespace LinkedIdSelector.ExternalEventsModeless
     {
         None = 0,
         SelectLinkedElement = 1,
+        SelectMultipleLinkedElements = 2,
     }
 }

@@ -31,7 +31,6 @@ namespace LinkedIdSelector
             NLogger.Setup();
             _logger.Info("------------------------------------------------");
             _logger.Info("LinkedIdSelector is gestart. \n");
-            _itemStore.AddLogToInterface("LinkedIdSelector is gestart");
 
             _doc = commandData.Application.ActiveUIDocument.Document;
             try
