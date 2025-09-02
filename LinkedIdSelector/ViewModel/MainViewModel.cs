@@ -14,7 +14,6 @@ namespace LinkedIdSelector.ViewModel
     {
         private Document _doc { get; set; }
         private RevitExternalEvents _revitExternalEvent;
-        public ICommand RunScriptCommand { get; }
         public ICommand SelectLinkedElementCommand { get; }
         public ICommand LoadFileCommand { get; }
         public ItemStore ItemStore { get; private set; }
@@ -69,7 +68,6 @@ namespace LinkedIdSelector.ViewModel
             _doc = doc;
             DataGridViewModel = new DataGridViewModel(this);
             LinkedElements = ItemStore.LinkedElementInfos;
-            RunScriptCommand = new RelayCommand(x => RunExampleScript());
             SelectLinkedElementCommand = new RelayCommand(x => _revitExternalEvent.MakeRequest(RevitRequestId.SelectLinkedElement));
             LoadFileCommand = new RelayCommand(x => RunLoadExcelCommand());
         }
@@ -152,8 +150,6 @@ namespace LinkedIdSelector.ViewModel
                 FilePath = string.Empty;
             }
         }
-
-        public void RunExampleScript() => _revitExternalEvent.MakeRequest(RevitRequestId.SampleRequest);
 
         private void OnLogMessageChanged(string message) => LogMessageForInterface = message;
     }

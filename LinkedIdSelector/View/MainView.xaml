@@ -102,11 +102,6 @@
             <Button
                 Width="100"
                 Margin="10"
-                Command="{Binding RunScriptCommand}"
-                Content="Run Script" />
-            <Button
-                Width="100"
-                Margin="10"
                 Command="{Binding SelectLinkedElementCommand}"
                 Content="Select Element" />
             <Button
