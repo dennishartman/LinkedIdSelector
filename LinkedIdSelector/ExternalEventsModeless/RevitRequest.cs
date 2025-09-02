@@ -24,6 +24,7 @@ namespace LinkedIdSelector.ExternalEventsModeless
     {
         None = 0,
         SampleRequest = 1,
+        SelectLinkedElement = 2,
 
     }
 }

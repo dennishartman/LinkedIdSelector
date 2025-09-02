@@ -1,8 +1,10 @@
-﻿using System.IO;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Input;
 using Autodesk.Revit.DB;
 using LinkedIdSelector.Commands;
 using LinkedIdSelector.ExternalEventsModeless;
+using LinkedIdSelector.Model;
 using LinkedIdSelector.Stores;
 using Microsoft.Win32;
 
@@ -13,9 +15,12 @@ namespace LinkedIdSelector.ViewModel
         private Document _doc { get; set; }
         private RevitExternalEvents _revitExternalEvent;
         public ICommand RunScriptCommand { get; }
+        public ICommand SelectLinkedElementCommand { get; }
+        public ICommand LoadFileCommand { get; }
         public ItemStore ItemStore { get; private set; }
 
         public DataGridViewModel DataGridViewModel { get; private set; }
+        public ObservableCollection<LinkedElementInfo> LinkedElements { get; }
 
         private string _logMessageForInterface;
         public string LogMessageForInterface
@@ -63,7 +68,10 @@ namespace LinkedIdSelector.ViewModel
             ItemStore.LogMessageChanged += OnLogMessageChanged;
             _doc = doc;
             DataGridViewModel = new DataGridViewModel(this);
+            LinkedElements = ItemStore.LinkedElementInfos;
             RunScriptCommand = new RelayCommand(x => RunExampleScript());
+            SelectLinkedElementCommand = new RelayCommand(x => _revitExternalEvent.MakeRequest(RevitRequestId.SelectLinkedElement));
+            LoadFileCommand = new RelayCommand(x => RunLoadExcelCommand());
         }
 
         public bool SetFilePath()
