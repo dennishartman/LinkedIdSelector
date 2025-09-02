@@ -39,6 +39,7 @@ namespace LinkedIdSelector.ViewModel
 
             LinkedElements = ItemStore.LinkedElementInfos;
             SelectLinkedElementCommand = new RelayCommand(x => _revitExternalEvent.MakeRequest(RevitRequestId.SelectLinkedElement));
+
             SelectMultipleLinkedElementsCommand = new RelayCommand(x =>
             {
                 IsFinishSelectionVisible = true;
@@ -50,6 +51,12 @@ namespace LinkedIdSelector.ViewModel
                 if (param is ElementId id)
                 {
                     Clipboard.SetText(id.Value.ToString());
+
+            CopyElementIdCommand = new RelayCommand(param =>
+            {
+                if (param is ElementId id)
+                {
+                    Clipboard.SetText(id.IntegerValue.ToString());
                 }
             });
         }
