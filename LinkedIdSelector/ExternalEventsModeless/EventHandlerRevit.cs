@@ -1,7 +1,7 @@
 ﻿using System;
 using Autodesk.Revit.UI;
 using LinkedIdSelector.Stores;
-
+using NLog;
 
 namespace LinkedIdSelector.ExternalEventsModeless
 {
@@ -9,6 +9,7 @@ namespace LinkedIdSelector.ExternalEventsModeless
     {
 
         private ItemStore _itemStore;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         // The value of the latest request made by the modeless form 
         private RevitRequest m_request = new RevitRequest();
@@ -58,9 +59,10 @@ namespace LinkedIdSelector.ExternalEventsModeless
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.Error(ex, "Error executing Revit event request");
+                TaskDialog.Show("LinkedIdSelector", ex.Message);
             }
         }
         public string GetName() => "Basic External EventHandler";
