@@ -23,7 +23,7 @@ namespace LinkedIdSelector.Stores
             }
         }
 
-        public List<ElementId> ElementIdsInCurrentView { get; set; } = new List<ElementId>();
+        public List<ElementId> ElementIdsInCurrentView { get; } = new List<ElementId>();
         public ObservableCollection<LinkedElementInfo> LinkedElementInfos { get; } = new ObservableCollection<LinkedElementInfo>();
         public ItemStore() { }
 
