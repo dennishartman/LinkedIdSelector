@@ -12,6 +12,7 @@
     Width="498"
     Height="286"
     SizeToContent="WidthAndHeight"
+
     Topmost="True"
     mc:Ignorable="d">
 
@@ -82,7 +83,6 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-      
         <StackPanel
             Grid.Row="2"
             Orientation="Horizontal"
