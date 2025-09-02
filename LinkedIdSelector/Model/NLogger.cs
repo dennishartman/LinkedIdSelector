@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -16,12 +17,14 @@ namespace LinkedIdSelector.Model
                 // Create a new NLog configuration
                 var config = new LoggingConfiguration();
 
-                DateTime dateTime = DateTime.Now;
+                var logDirectory = @"C:\\logFiles";
+                Directory.CreateDirectory(logDirectory);
+                var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
                 // Define file target
                 var fileTarget = new FileTarget
                 {
-                    FileName = $"C:\\logFiles\\log_{dateTime}.txt",
+                    FileName = Path.Combine(logDirectory, $"log_{timestamp}.txt"),
                     Layout = "${longdate} ${level} ${message} ${exception}"
                 };
 
