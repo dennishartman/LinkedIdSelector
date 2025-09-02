@@ -122,6 +122,15 @@ namespace LinkedIdSelector.ViewModel
 
         }
 
+        public void GetElementsInCurrentView()
+        {
+            ItemStore.ElementIdsInCurrentView.Clear();
+            if (_doc?.ActiveView == null) return;
+
+            var collector = new FilteredElementCollector(_doc, _doc.ActiveView.Id);
+            ItemStore.ElementIdsInCurrentView.AddRange(collector.ToElementIds());
+        }
+
         public void LoadData()
         {
 

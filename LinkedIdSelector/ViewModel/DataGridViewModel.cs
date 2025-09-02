@@ -41,8 +41,15 @@ namespace LinkedIdSelector.ViewModel
                 _filterByView = value;
                 OnPropertyChanged(nameof(FilterByView));
 
-                // Example filter
-                //if (value == true) _mainViewModel.GetElementsInCurrentView();
+                if (value)
+                {
+                    _mainViewModel.GetElementsInCurrentView();
+                }
+                else
+                {
+                    _itemStore.ElementIdsInCurrentView.Clear();
+                }
+
                 FilteredItems.Refresh();
             }
         }
