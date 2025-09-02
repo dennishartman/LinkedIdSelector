@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Autodesk.Revit.DB;
+using LinkedIdSelector.Model;
 
 namespace LinkedIdSelector.Stores
 {
@@ -22,6 +24,7 @@ namespace LinkedIdSelector.Stores
         }
 
         public List<ElementId> ElementIdsInCurrentView { get; set; } = new List<ElementId>();
+        public ObservableCollection<LinkedElementInfo> LinkedElementInfos { get; } = new ObservableCollection<LinkedElementInfo>();
         public ItemStore() { }
 
 

@@ -51,6 +51,12 @@ namespace LinkedIdSelector.ExternalEventsModeless
                                 break;
                             }
 
+                        case RevitRequestId.SelectLinkedElement:
+                            {
+                                _modelessCommands.SelectLinkedElement(uiapp, _itemStore);
+                                break;
+                            }
+
                         default:
                             {
                                 break;
