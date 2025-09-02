@@ -1,8 +1,7 @@
-﻿<Window
+<Window
     x:Class="LinkedIdSelector.View.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:components="clr-namespace:LinkedIdSelector.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:LinkedIdSelector.ViewModel"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,6 +10,7 @@
     d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
     Background="{DynamicResource ApplicationBackGround}"
     SizeToContent="WidthAndHeight"
+    Topmost="True"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -22,27 +22,14 @@
     </Window.Resources>
 
     <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="300" />
-        </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Height="50"
-            Orientation="Horizontal">
-            <!--<Image Margin="0,8" Source="pack://application:,,,/LinkedIdSelector;component/Resources/BamLogoGreen.png" />-->
+        <StackPanel Grid.Row="0" Height="50" Orientation="Horizontal">
             <Image Margin="0,8" Source="/LinkedIdSelector;component/Resources/BamLogoGreen.png" />
-
             <TextBlock
                 Margin="10,0,0,0"
                 VerticalAlignment="Center"
@@ -51,51 +38,41 @@
                 Text="Sample Tool" />
         </StackPanel>
 
-        <components:DataGrid
+        <DataGrid
             Grid.Row="1"
-            Grid.RowSpan="3"
-            Grid.Column="0"
-            DataContext="{Binding DataGridViewModel}" />
+            ItemsSource="{Binding LinkedElements}"
+            AutoGenerateColumns="False"
+            CellStyle="{StaticResource CustomCellStyle}"
+            ColumnHeaderStyle="{StaticResource ModernColumnHeaderStyle}"
+            GridLinesVisibility="None"
+            RowStyle="{StaticResource CustomRowStyle}"
+            ScrollViewer.CanContentScroll="True"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            Style="{StaticResource ModernDataGridStyle}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding ElementId}" Header="Revit Id" />
+                <DataGridTextColumn Binding="{Binding LinkName}" Header="Link Name" />
+                <DataGridTemplateColumn Header="Copy">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                Content="Copy"
+                                Command="{Binding DataContext.CopyElementIdCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                CommandParameter="{Binding ElementId}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
-        <!--  SPACER BETWEEN THE LEGENDA AND THE DATA GRID  -->
-        <StackPanel Grid.Column="1" Margin="10" />
-
-        <Grid Grid.Row="1" Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Label Content="Logging screen" />
-            <TextBlock
-                Grid.Row="1"
-                VerticalAlignment="Stretch"
-                Background="White"
-                Text="{Binding LogMessageForInterface}" />
-        </Grid>
-
-        <StackPanel
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Height="150"
-            HorizontalAlignment="Right"
-            Orientation="Vertical">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button
                 Width="100"
                 Margin="10"
-                Command="{Binding LoadFileCommand}"
-                Content="Load File" />
-            <Button
-                Width="100"
-                Margin="10"
-                Command="{Binding RunScriptCommand}"
-                Content="Run Script" />
-            <Button
-                Width="100"
-                Margin="10"
-                Content="Cancel" />
-
+                Command="{Binding SelectLinkedElementCommand}"
+                Content="Select Element" />
         </StackPanel>
     </Grid>
 </Window>
+

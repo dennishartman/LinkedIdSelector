@@ -1,143 +1,41 @@
-﻿using System.IO;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
-using Autodesk.Revit.DB;
 using LinkedIdSelector.Commands;
 using LinkedIdSelector.ExternalEventsModeless;
+using LinkedIdSelector.Model;
 using LinkedIdSelector.Stores;
-using Microsoft.Win32;
 
 namespace LinkedIdSelector.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private Document _doc { get; set; }
-        private RevitExternalEvents _revitExternalEvent;
-        public ICommand RunScriptCommand { get; }
-        public ItemStore ItemStore { get; private set; }
+        private readonly RevitExternalEvents _revitExternalEvent;
 
-        public DataGridViewModel DataGridViewModel { get; private set; }
+        public ICommand SelectLinkedElementCommand { get; }
+        public ICommand CopyElementIdCommand { get; }
 
-        private string _logMessageForInterface;
-        public string LogMessageForInterface
-        {
-            get => _logMessageForInterface;
-            set
-            {
-                _logMessageForInterface = value;
-                OnPropertyChanged(nameof(LogMessageForInterface));
-            }
-        }
+        public ItemStore ItemStore { get; }
 
+        public ObservableCollection<LinkedElementInfo> LinkedElements { get; }
 
-        private string _filePath;
-        public string FilePath
-        {
-            get => _filePath;
-            set
-            {
-                _filePath = value;
-                OnPropertyChanged(nameof(FilePath));
-            }
-        }
-
-        private bool _filePathExist;
-        public bool FilePathExist
-        {
-            get
-            {
-                return _filePathExist;
-            }
-            set
-            {
-                _filePathExist = value;
-                OnPropertyChanged(nameof(FilePathExist));
-            }
-        }
-
-
-        public MainViewModel(Document doc, RevitExternalEvents externalEvent, ItemStore itemStore)
+        public MainViewModel(RevitExternalEvents externalEvent, ItemStore itemStore)
         {
             _revitExternalEvent = externalEvent;
             ItemStore = itemStore;
-            LogMessageForInterface = ItemStore.LogMessageForInterfaceItemStore;
-            ItemStore.LogMessageChanged += OnLogMessageChanged;
-            _doc = doc;
-            DataGridViewModel = new DataGridViewModel(this);
-            RunScriptCommand = new RelayCommand(x => RunExampleScript());
+            LinkedElements = ItemStore.LinkedElementInfos;
+
+            SelectLinkedElementCommand = new RelayCommand(_ => _revitExternalEvent.MakeRequest(RevitRequestId.SelectLinkedElement));
+            CopyElementIdCommand = new RelayCommand(id => CopyElementId(id));
         }
 
-        public bool SetFilePath()
+        private void CopyElementId(object id)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            if (AppSettings.Instance.FilePath != string.Empty)
+            if (id != null)
             {
-                try
-                {
-                    openFileDialog.InitialDirectory = Path.GetDirectoryName(AppSettings.Instance.FilePath);
-                }
-                catch
-                {
-                    openFileDialog.InitialDirectory = @"c:\";
-                }
-
-            }
-            else
-            {
-                openFileDialog.InitialDirectory = @"c:\";
-            }
-
-            openFileDialog.Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*";
-            openFileDialog.FilterIndex = 2;
-            openFileDialog.RestoreDirectory = true;
-            openFileDialog.ShowDialog();
-            string filePath = openFileDialog.FileName;
-
-            if (openFileDialog.FileName == string.Empty) return false;
-
-            AppSettings.Instance.FilePath = filePath;
-            AppSettings.Instance.Save();
-
-            FilePath = filePath;
-            System.Windows.Input.CommandManager.InvalidateRequerySuggested();
-
-            return true;
-        }
-
-        public void RunLoadExcelCommand()
-        {
-            if (SetFilePath())
-            {
-                LoadData();
-            }
-
-
-        }
-
-        public void LoadData()
-        {
-
-        }
-
-
-        public void LoadExcelFileOnStartUp()
-        {
-            FilePath = AppSettings.Instance.FilePath;
-
-
-
-            if (File.Exists(FilePath))
-            {
-                LoadData();
-            }
-            else
-            {
-                FilePath = string.Empty;
+                Clipboard.SetText(id.ToString());
             }
         }
-
-        public void RunExampleScript() => _revitExternalEvent.MakeRequest(RevitRequestId.SampleRequest);
-
-        private void OnLogMessageChanged(string message) => LogMessageForInterface = message;
     }
 }
+
