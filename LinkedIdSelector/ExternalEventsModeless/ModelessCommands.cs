@@ -20,9 +20,10 @@ namespace LinkedIdSelector.ExternalEventsModeless
                 if (linkInstance == null) return;
 
                 ElementId linkedElementId = reference.LinkedElementId;
-                string linkName = linkInstance.Document.Title;
+                string linkTypeName = linkInstance.Name.Split(':')[0];
 
-                itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkName));
+
+                itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkTypeName));
             }
             catch (Autodesk.Revit.Exceptions.OperationCanceledException)
             {
@@ -41,9 +42,9 @@ namespace LinkedIdSelector.ExternalEventsModeless
                     if (linkInstance == null) continue;
 
                     ElementId linkedElementId = reference.LinkedElementId;
-                    string linkName = linkInstance.Document.Title;
+                    string linkTypeName = linkInstance.Name.Split(':')[0];
 
-                    itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkName));
+                    itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkTypeName));
                 }
             }
             catch (Autodesk.Revit.Exceptions.OperationCanceledException)

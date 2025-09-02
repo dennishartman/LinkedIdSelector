@@ -14,19 +14,8 @@ namespace LinkedIdSelector.ViewModel
         private Document _doc { get; set; }
         private RevitExternalEvents _revitExternalEvent;
         public ICommand SelectLinkedElementCommand { get; }
-        public ICommand CopyElementIdCommand { get; }
+        public ICommand CopyElementIdCommand { get; set; }
         public ICommand SelectMultipleLinkedElementsCommand { get; }
-        public ICommand FinishSelectionCommand { get; }
-        private bool _isFinishSelectionVisible;
-        public bool IsFinishSelectionVisible
-        {
-            get => _isFinishSelectionVisible;
-            set
-            {
-                _isFinishSelectionVisible = value;
-                OnPropertyChanged(nameof(IsFinishSelectionVisible));
-            }
-        }
         public ItemStore ItemStore { get; private set; }
 
         public ObservableCollection<LinkedElementInfo> LinkedElements { get; }
@@ -42,10 +31,8 @@ namespace LinkedIdSelector.ViewModel
 
             SelectMultipleLinkedElementsCommand = new RelayCommand(x =>
             {
-                IsFinishSelectionVisible = true;
                 _revitExternalEvent.MakeRequest(RevitRequestId.SelectMultipleLinkedElements);
             });
-            FinishSelectionCommand = new RelayCommand(x => IsFinishSelectionVisible = false);
             CopyElementIdCommand = new RelayCommand(param =>
             {
                 if (param is ElementId id)

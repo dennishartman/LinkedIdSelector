@@ -9,22 +9,96 @@
     xmlns:vms="clr-namespace:LinkedIdSelector.ViewModel"
     d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
     Background="{DynamicResource ApplicationBackGround}"
-    Width="498"
-    Height="286"
-    SizeToContent="WidthAndHeight"
-
+    Width="500"
+    Height="500"
     Topmost="True"
     mc:Ignorable="d">
 
+    <!-- ===================== Resources ===================== -->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- jouw bestaande stijlen -->
                 <ResourceDictionary Source="./Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+
+            <!-- Compacte icon-only button met hover/press feedback -->
+            <Style x:Key="IconButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="Width" Value="24"/>
+                <Setter Property="Height" Value="24"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#14000000"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#22000000"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.4"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Clipboard (copy) icoon in pure XAML -->
+            <DataTemplate x:Key="ClipboardIcon">
+                <Viewbox Width="16" Height="16">
+                    <Canvas Width="16" Height="16">
+                        <!-- Papier -->
+                        <Path Data="M3,4 H13 V15 H3 Z"
+                              Stroke="#333"
+                              StrokeThickness="1.2"
+                              Fill="#FAFAFA"/>
+                        <!-- Clip basis -->
+                        <Path Data="M5,2 H11 V4 H5 Z"
+                              Stroke="#333"
+                              StrokeThickness="1.2"
+                              Fill="#E6E6E6"/>
+                        <!-- Afgeronde clip top -->
+                        <Path Data="M6,1 H10 C10.55,1 11,1.45 11,2
+                                    L11,2.2
+                                    H5 L5,2
+                                    C5,1.45 5.45,1 6,1 Z"
+                              Stroke="#333"
+                              StrokeThickness="1.2"
+                              Fill="#E6E6E6"/>
+                        <!-- Kleine notch in de clip -->
+                        <Rectangle Canvas.Left="6" Canvas.Top="2.2"
+                                   Width="4" Height="1"
+                                   RadiusX="0.5" RadiusY="0.5"
+                                   Fill="#333"/>
+                    </Canvas>
+                </Viewbox>
+            </DataTemplate>
+
+            <!-- Trimming voor tekst in cellen om horizontale groei te voorkomen -->
+            <Style x:Key="NoWrapTrimmedTextBlock" TargetType="TextBlock">
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
 
+    <!-- ===================== Layout ===================== -->
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -32,85 +106,80 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel
-            Grid.Row="0"
-            Height="50"
-            Orientation="Horizontal">
-            <Image Margin="0,8" Source="/LinkedIdSelector;component/Resources/BamLogoGreen.png" />
-            <TextBlock
-                Margin="10,0,0,0"
-                VerticalAlignment="Center"
-                FontSize="24"
-                FontWeight="DemiBold"
-                Text="Linked ID Selector" />
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Height="50" Orientation="Horizontal">
+            <Image Margin="0,8"
+                   Source="/LinkedIdSelector;component/Resources/BamLogoGreen.png" />
+            <TextBlock Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       FontSize="24"
+                       FontWeight="DemiBold"
+                       Text="Linked ID Selector" />
         </StackPanel>
 
-        <DataGrid
-            Grid.Row="1"
-            ItemsSource="{Binding LinkedElements}"
-            AutoGenerateColumns="False"
-            CellStyle="{StaticResource CustomCellStyle}"
-            ColumnHeaderStyle="{StaticResource ModernColumnHeaderStyle}"
-            GridLinesVisibility="None"
-            RowStyle="{StaticResource CustomRowStyle}"
-            ScrollViewer.CanContentScroll="True"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            Style="{StaticResource ModernDataGridStyle}">
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding LinkedElements}"
+                  AutoGenerateColumns="False"
+                  CellStyle="{StaticResource CustomCellStyle}"
+                  ColumnHeaderStyle="{StaticResource ModernColumnHeaderStyle}"
+                  GridLinesVisibility="None"
+                  RowStyle="{StaticResource CustomRowStyle}"
+                  CanUserResizeColumns="False"
+                  HeadersVisibility="Column"
+                  RowHeaderWidth="0"
+                  ScrollViewer.CanContentScroll="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Style="{StaticResource ModernDataGridStyle}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Revit Id">
+
+                <!-- Revit Id (vaste breedte) -->
+                <DataGridTemplateColumn Header="Revit Id" Width="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center" Text="{Binding ElementId}" />
-                                <Button Content="Copy"
-                                        Margin="5,0,0,0"
+                                <!-- Copy-knop met clipboard-icoon -->
+                                <Button Style="{StaticResource IconButton}"
+                                        Margin="0,0,10,0"
+                                        ToolTip="Copy ElementId"
                                         Command="{Binding DataContext.CopyElementIdCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                        CommandParameter="{Binding ElementId}" />
+                                        CommandParameter="{Binding ElementId}">
+                                    <ContentPresenter ContentTemplate="{StaticResource ClipboardIcon}"/>
+                                </Button>
+
+                                <!-- Toon de ElementId -->
+                                <TextBlock Style="{StaticResource NoWrapTrimmedTextBlock}"
+                                           Text="{Binding ElementId}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding LinkName}" Header="Link Name" />
-                <DataGridTemplateColumn Header="Copy">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Copy"
-                                    Command="{Binding DataContext.CopyElementIdCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding ElementId}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+
+                <!-- Link Name (neemt resterende ruimte in, geen wrap) -->
+                <DataGridTextColumn Header="Link Name" Width="*"
+                                    Binding="{Binding LinkName}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource NoWrapTrimmedTextBlock}"/>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel
-            Grid.Row="2"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right">
-            <Button
-                Width="100"
-                Margin="10,10,0,10"
-                Command="{Binding SelectLinkedElementCommand}"
-                Content="Select element" />
-            <Button
-                Width="150"
-                Margin="10,10,0,10"
-                Command="{Binding SelectMultipleLinkedElementsCommand}"
-                Content="Select multiple elements" />
-            <Button
-                Width="120"
-                Margin="10"
-                Command="{Binding FinishSelectionCommand}"
-                Content="Finish selection"
-                Visibility="{Binding IsFinishSelectionVisible, Converter={StaticResource BoolToVis}}" />
+
+        <!-- Buttons onderaan -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Width="100"
+                    Margin="10,10,0,10"
+                    Command="{Binding SelectLinkedElementCommand}"
+                    Content="Select element" />
+            <Button Width="150"
+                    Margin="10,10,0,10"
+                    Command="{Binding SelectMultipleLinkedElementsCommand}"
+                    Content="Select multiple elements" />
         </StackPanel>
-      
-        <Button
-            Grid.Row="2"
-            Width="100"
-            Margin="10"
-            HorizontalAlignment="Right"
-            Command="{Binding SelectLinkedElementCommand}"
-            Content="Select Element" />
     </Grid>
 </Window>
