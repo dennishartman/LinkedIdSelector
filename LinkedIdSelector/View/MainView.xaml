@@ -9,6 +9,8 @@
     xmlns:vms="clr-namespace:LinkedIdSelector.ViewModel"
     d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
     Background="{DynamicResource ApplicationBackGround}"
+    Width="498"
+    Height="286"
     SizeToContent="WidthAndHeight"
     Topmost="True"
     mc:Ignorable="d">
@@ -18,6 +20,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="./Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -38,7 +41,7 @@
                 VerticalAlignment="Center"
                 FontSize="24"
                 FontWeight="DemiBold"
-                Text="Sample Tool" />
+                Text="Linked ID Selector" />
         </StackPanel>
 
         <DataGrid
@@ -54,7 +57,19 @@
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             Style="{StaticResource ModernDataGridStyle}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ElementId}" Header="Revit Id" />
+                <DataGridTemplateColumn Header="Revit Id">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding ElementId}" />
+                                <Button Content="Copy"
+                                        Margin="5,0,0,0"
+                                        Command="{Binding DataContext.CopyElementIdCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding ElementId}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding LinkName}" Header="Link Name" />
                 <DataGridTemplateColumn Header="Copy">
                     <DataGridTemplateColumn.CellTemplate>
@@ -67,7 +82,29 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
+      
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+            <Button
+                Width="100"
+                Margin="10,10,0,10"
+                Command="{Binding SelectLinkedElementCommand}"
+                Content="Select element" />
+            <Button
+                Width="150"
+                Margin="10,10,0,10"
+                Command="{Binding SelectMultipleLinkedElementsCommand}"
+                Content="Select multiple elements" />
+            <Button
+                Width="120"
+                Margin="10"
+                Command="{Binding FinishSelectionCommand}"
+                Content="Finish selection"
+                Visibility="{Binding IsFinishSelectionVisible, Converter={StaticResource BoolToVis}}" />
+        </StackPanel>
+      
         <Button
             Grid.Row="2"
             Width="100"

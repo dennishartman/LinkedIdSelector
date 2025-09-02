@@ -28,5 +28,27 @@ namespace LinkedIdSelector.ExternalEventsModeless
             {
             }
         }
+
+        public void SelectMultipleLinkedElements(UIApplication uiapp, ItemStore itemstore)
+        {
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            try
+            {
+                var references = uidoc.Selection.PickObjects(ObjectType.LinkedElement, "Select elements in a linked model");
+                foreach (var reference in references)
+                {
+                    RevitLinkInstance linkInstance = uidoc.Document.GetElement(reference) as RevitLinkInstance;
+                    if (linkInstance == null) continue;
+
+                    ElementId linkedElementId = reference.LinkedElementId;
+                    string linkName = linkInstance.Document.Title;
+
+                    itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkName));
+                }
+            }
+            catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+            {
+            }
+        }
     }
 }
