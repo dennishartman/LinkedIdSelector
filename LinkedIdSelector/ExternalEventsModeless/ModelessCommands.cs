@@ -20,14 +20,12 @@ namespace LinkedIdSelector.ExternalEventsModeless
                 if (linkInstance == null) return;
 
                 ElementId linkedElementId = reference.LinkedElementId;
-                string linkName = linkInstance.Name;
+                string linkName = linkInstance.Document.Title;
 
                 itemstore.LinkedElementInfos.Add(new LinkedElementInfo(linkedElementId, linkName));
-                itemstore.AddLogToInterface($"Selected {linkedElementId.IntegerValue} from {linkName}");
             }
             catch (Autodesk.Revit.Exceptions.OperationCanceledException)
             {
-                itemstore.AddLogToInterface("Selection canceled");
             }
         }
     }

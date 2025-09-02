@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="LinkedIdSelector.View.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,7 @@
     d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
     Background="{DynamicResource ApplicationBackGround}"
     SizeToContent="WidthAndHeight"
+    Topmost="True"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -21,12 +22,6 @@
     </Window.Resources>
 
     <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="300" />
-        </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
@@ -35,13 +30,9 @@
 
         <StackPanel
             Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
             Height="50"
             Orientation="Horizontal">
-            <!--<Image Margin="0,8" Source="pack://application:,,,/LinkedIdSelector;component/Resources/BamLogoGreen.png" />-->
             <Image Margin="0,8" Source="/LinkedIdSelector;component/Resources/BamLogoGreen.png" />
-
             <TextBlock
                 Margin="10,0,0,0"
                 VerticalAlignment="Center"
@@ -52,8 +43,6 @@
 
         <DataGrid
             Grid.Row="1"
-            Grid.RowSpan="3"
-            Grid.Column="0"
             ItemsSource="{Binding LinkedElements}"
             AutoGenerateColumns="False"
             CellStyle="{StaticResource CustomCellStyle}"
@@ -67,48 +56,24 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ElementId}" Header="Revit Id" />
                 <DataGridTextColumn Binding="{Binding LinkName}" Header="Link Name" />
+                <DataGridTemplateColumn Header="Copy">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Copy"
+                                    Command="{Binding DataContext.CopyElementIdCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding ElementId}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 
-        <!--  SPACER BETWEEN THE LEGENDA AND THE DATA GRID  -->
-        <StackPanel Grid.Column="1" Margin="10" />
-
-        <Grid Grid.Row="1" Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Label Content="Logging screen" />
-            <TextBlock
-                Grid.Row="1"
-                VerticalAlignment="Stretch"
-                Background="White"
-                Text="{Binding LogMessageForInterface}" />
-        </Grid>
-
-        <StackPanel
+        <Button
             Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Height="150"
+            Width="100"
+            Margin="10"
             HorizontalAlignment="Right"
-            Orientation="Vertical">
-            <Button
-                Width="100"
-                Margin="10"
-                Command="{Binding LoadFileCommand}"
-                Content="Load File" />
-            <Button
-                Width="100"
-                Margin="10"
-                Command="{Binding SelectLinkedElementCommand}"
-                Content="Select Element" />
-            <Button
-                Width="100"
-                Margin="10"
-                Content="Cancel" />
-
-        </StackPanel>
+            Command="{Binding SelectLinkedElementCommand}"
+            Content="Select Element" />
     </Grid>
 </Window>
